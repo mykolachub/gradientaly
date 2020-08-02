@@ -1,44 +1,34 @@
-const   Circle1 = document.getElementById('Circle1'),
-        Circle2 = document.getElementById('Circle2'),
-        Circle3 = document.getElementById('Circle3');
+let Circle1 = document.getElementById('Circle1'),
+    Circle2 = document.getElementById('Circle2'),
+    Circle3 = document.getElementById('Circle3');
 
-const cursor = document.getElementById('cursor');
-const hover = document.getElementById('hover');
+let cursor = document.getElementById('cursor');
+    hovered = document.querySelectorAll('.hovered');
+    StartLogo = document.getElementById('StartLogo');
+    HeaderLogo = document.getElementById('HeaderLogo');
 
-let randomX, 
-    randomY;
+// cursor
+hovered.forEach(element => {
+    element.addEventListener('mouseover', () => {
+        if (element.classList.contains("hovered-xl")) {
+            cursor.classList.add('cursor--hovered-xl');
+        } else{
+            cursor.classList.add('cursor--hovered-sm');
+        }
+    });
 
-const random = function (min, max) {
-    return Math.floor( min + Math.random() * (max + 1 - min));
-}
-
-const animatedCircle = () => {
-    randomX = random(10, 50);
-    randomY = random(10, 50);
-    Circle1.style.top = `calc(80% + ${randomX}px)`;
-    Circle1.style.left = `calc(20% + ${randomY}px)`;
-
-    Circle2.style.top = `calc(30% + ${randomX}px)`;
-    Circle2.style.left = `calc(50% - ${randomY}px)`;
-
-    Circle3.style.top = `calc(70% - ${randomX}px)`;
-    Circle3.style.left = `calc(80% + ${randomY}px)`;
-};
-
-hover.addEventListener('mouseover', () => {
-    cursor.classList.add('cursor--hovered');
+    element.addEventListener('mouseout', () => {
+        if (element.classList.contains("hovered-xl")) {
+            cursor.classList.remove('cursor--hovered-xl');
+        } else{
+            cursor.classList.remove('cursor--hovered-sm');
+        }
+    });
 });
-
-hover.addEventListener('mouseout', () => {
-    cursor.classList.remove('cursor--hovered');
-});
-
 
 document.addEventListener('mousemove', e => {
     let mouseX = e.clientX / 20;
     let mouseY = e.clientY / 20;
-
-    //cursor.style.transform = `translate(calc(-50% + ${e.clientX}px) , calc(-50% + ${e.clientY}px)) rotate(45deg)`;
 
     cursor.style.top = `${e.clientY}px`;
     cursor.style.left = `${e.clientX}px`;
@@ -48,7 +38,21 @@ document.addEventListener('mousemove', e => {
     Circle3.style.transform = `translate(calc(-50% + ${mouseX}px) , calc(-50% - ${mouseY}px))`;
 });
 
-/*
-setInterval(() => {
-    animatedCircle();
-}, 4000);*/
+const options = {
+    root: null,
+    threshold: 0,
+    rootMargin: "0px 0px 0px 0px"
+};
+
+const observer = new IntersectionObserver(function(entries, observer) {
+    entries.forEach(entry => {
+        console.log(entry.isIntersecting);
+        if (!entry.isIntersecting) {
+            HeaderLogo.classList.add('header__logo-a--active');
+        } else{
+            HeaderLogo.classList.remove('header__logo-a--active');
+        }
+    });
+}, options);
+
+observer.observe(StartLogo);
